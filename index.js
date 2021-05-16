@@ -5,9 +5,9 @@ const http = require('http');
 const https = require('https');
 
 // Certificate
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/botruneterra.com/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/botruneterra.com/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/botruneterra.com/chain.pem', 'utf8');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/botruneterra.com.br/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/botruneterra.com.br/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/botruneterra.com.br/chain.pem', 'utf8');
 
 const credentials = {
     key: privateKey,

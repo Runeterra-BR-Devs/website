@@ -17,22 +17,17 @@ const credentials = {
 
 app.use(express.static('assets'));
 
-app.enable('trust proxy')
-app.use((req, res, next) => {
-    req.secure ? next() : res.redirect('https://' + req.headers.host + req.url)
-})
-
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
 // Starting both http & https servers
-const httpServer = http.createServer(app);
-const httpsServer = https.createServer(credentials, app);
+http.createServer((req, res) => {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(80);
 
-httpServer.listen(80, () => {
-	console.log('HTTP Server running on port 80');
-});
+const httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(443, () => {
 	console.log('HTTPS Server running on port 443');

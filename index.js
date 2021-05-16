@@ -2,8 +2,10 @@ const express = require('express');
 const app = express()
 const port = 80
 
+app.use(express.static('assets'));
+
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.sendFile(__dirname + '/index.html');
 });
 
 app.listen(port, () => {

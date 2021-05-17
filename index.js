@@ -64,7 +64,7 @@ if (isProduction) {
     });
 }
 
-const io = new Server(httpServer);
+const io = new Server(isProduction ? httpsServer : httpServer);
 
 io.on('connection', (socket) => {
     sockets[socket.handshake.query.username] = socket;

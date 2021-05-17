@@ -1,0 +1,41 @@
+<script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+<script>
+    window.onload = () => {
+        const image = document.querySelector("#champion-image");
+
+        const socket = io({
+            query: {
+                username: window.location.pathname.split('/').slice(-1).join()
+            }
+        });
+
+        socket.on('card', card => {
+            image.src = card.assets[0].gameAbsolutePath;
+
+            image.classList.remove('animation');
+            void image.offsetWidth;
+            image.classList.add('animation');
+        });
+    }
+</script>
+
+<style>
+    .animation {
+        font-weight: bold;
+        position: absolute;
+        animation: myMove 10s;
+
+        animation-timing-function: ease-in-out;
+
+        left: -1200px;
+    }
+
+    @keyframes myMove {
+        0% {left: -500px;}
+        10% {left: 0px; }
+        85% {left: 0px; }
+        100% {left: -1200px; }
+    }
+</style>
+
+<img id="champion-image" src="" alt="">

@@ -3,6 +3,9 @@ const app = express()
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
+const bodyParser = require('body-parser')
+
+const { Server } = require("socket.io");
 
 const isProduction = process.env.NODE_ENV != 'development';
 
@@ -17,13 +20,34 @@ const credentials = {
     ca: ca
 };
 
+var sockets = {};
+
 app.use(express.static('assets'));
+app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-http.createServer(isProduction ? (req, res) => {
+app.get('/live-card/:stream', (req, res) => {
+    res.sendFile(__dirname + '/live-card.html');
+});
+
+app.post('/send-card/:stream', (req, res) => {
+    try{
+        sockets[req.params.stream].emit('card', req.body);
+
+        return res.json({
+            status: '200'
+        });
+    } catch (e) {
+        return res.json({
+            message: 'Não deu certo'
+        }).status(500);
+    }
+});
+
+const httpServer = http.createServer(isProduction ? (req, res) => {
     if (isProduction) {
         res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
         return res.end();
@@ -39,3 +63,9 @@ if (isProduction) {
         console.log('HTTPS Server running on port 443');
     });
 }
+
+const io = new Server(httpServer);
+
+io.on('connection', (socket) => {
+    sockets[socket.handshake.query.username] = socket;
+});

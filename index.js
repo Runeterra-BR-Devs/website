@@ -23,7 +23,6 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-
 http.createServer(isProduction ? (req, res) => {
     if (isProduction) {
         res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
